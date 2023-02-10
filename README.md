@@ -37,7 +37,7 @@ This returns the index in the metadata of the JSON file corresponding to the pro
 Example:
 ```py
   metadata_key = "ra"
-	index = get_metadata_index(metadata_key)
+  index = get_metadata_index(metadata_key)
 ```
 
 This will get the metadata index for the right ascension column
