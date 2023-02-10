@@ -22,3 +22,4 @@ Example:
 ```py
   select_file("Data/1675856164509O-result.json")
 ```
+In this case, the script running the method would be in the same location as the folder ```Data``` containing the JSON file.
