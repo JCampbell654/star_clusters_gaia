@@ -16,3 +16,9 @@ This library allows the user to pull data directly from Gaia archive JSON files 
 | path      | String       | The path containing the desired JSON file |
 
 This selects a JSON file to get the data from. This must be done before attempting to extract any data using any other methods.
+Note: The path starts from the location of the file.
+
+Example:
+'''python
+  select_file("Data/1675856164509O-result.json")
+'''
