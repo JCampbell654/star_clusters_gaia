@@ -58,3 +58,34 @@ Example:
 ```
 
 This will return all the available data for the first star in the JSON file.
+
+## get_dec():
+
+This will return an array of all declination within the data
+
+#### Returns: numpy array
+
+## get_ra():
+
+This will return an array of all right-ascensions within the data
+
+#### Returns: numpy array
+
+## get_pmra():
+
+This will return an array of all right-ascension proper motions within the data
+
+#### Returns: numpy array
+
+## get_pmdec():
+
+This will return an array of all declination proper motions within the data
+
+#### Returns: numpy array
+
+## get_parallax():
+
+This will return an array of all parallaxes within the data
+
+#### Returns: numpy array
+
