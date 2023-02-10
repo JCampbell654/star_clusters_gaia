@@ -19,8 +19,6 @@ This selects a JSON file to get the data from. This must be done before attempti
 Note: The path starts from the location of the file.
 
 Example:
-'''py
-{
+```py
   select_file("Data/1675856164509O-result.json")
-}
-'''
+```
