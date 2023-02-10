@@ -20,5 +20,7 @@ Note: The path starts from the location of the file.
 
 Example:
 '''python
+{
   select_file("Data/1675856164509O-result.json")
+}
 '''
