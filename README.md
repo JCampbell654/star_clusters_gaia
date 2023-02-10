@@ -23,3 +23,21 @@ Example:
   select_file("Data/1675856164509O-result.json")
 ```
 In this case, the script running the method would be in the same location as the folder ```Data``` containing the JSON file.
+
+## get_metadata_index(key)
+
+| Argument    | Type        | Description |
+| ----------- | ----------- |-------------|
+| key      | String       | The name of the column listed in the JSON files, e.g. "pmra" for proper motion right ascension |
+
+This returns the index in the metadata of the JSON file corresponding to the provided key
+
+#### Returns: integer
+
+Example:
+```py
+  metadata_key = "ra"
+	index = get_metadata_index(metadata_key)
+```
+
+This will get the metadata index for the right ascension column
