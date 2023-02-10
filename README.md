@@ -3,13 +3,13 @@
 
 Internal dynamics of star clusters using the Gaia mission archive
 
-## Documentation
+# Documentation
 
-### Data handler library
+## Data handler library
 
 This library allows the user to pull data directly from Gaia archive JSON files and converts it into a usable format consisting of numpy arrays.
 
-#### select_file(path)
+## select_file(path)
 
 | Argument    | Type        | Description |
 | ----------- | ----------- |-------------|
