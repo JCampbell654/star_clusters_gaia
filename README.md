@@ -13,4 +13,6 @@ This library allows the user to pull data directly from Gaia archive JSON files 
 
 | Argument    | Type        | Description |
 | ----------- | ----------- |-------------|
-| path      | string       | The path containing the desired JSON file |
+| path      | String       | The path containing the desired JSON file |
+
+This selects a JSON file to get the data from. This must be done before attempting to extract any data using any other methods.
