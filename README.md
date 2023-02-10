@@ -30,7 +30,7 @@ In this case, the script running the method would be in the same location as the
 | ----------- | ----------- |-------------|
 | key      | String       | The name of the column listed in the JSON files, e.g. "pmra" for proper motion right ascension |
 
-This returns the index in the metadata of the JSON file corresponding to the provided key
+This returns the index in the metadata of the JSON file corresponding to the provided key.
 
 #### Returns: integer
 
@@ -40,4 +40,21 @@ Example:
   index = get_metadata_index(metadata_key)
 ```
 
-This will get the metadata index for the right ascension column
+This will get the metadata index for the right ascension column.
+
+## get_star_data(index)
+
+| Argument    | Type        | Description |
+| ----------- | ----------- |-------------|
+| index      | Integer       | The index of the star to get data for |
+
+This will get the data for a specific star in the JSON file.
+
+#### Returns: numpy array
+
+Example:
+```py
+  data = get_star_data(0)
+```
+
+This will return all the available data for the first star in the JSON file.
