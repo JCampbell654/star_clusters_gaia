@@ -1,54 +1,46 @@
 import json
 import numpy as np
 
-file_path = "";
+class Data:
+	def __init__(self, path):
+		content = json.load(open(path))
+		self.data = np.array(content['data'])
+		self.metadata = np.array(content['metadata'])
 
-global data, metadata
-data = np.zeros([])
-metadata = np.zeros([])
 
-#Select a data file
-def select_file(path):
-	global data, metadata
-	file_path = open(path)
-	content = json.load(file_path)
+	def get_metadata_index(self, key):
+		size = self.metadata.size
+		for i in range(size):
+			if (self.metadata[i]['name'] == key):
+				return i
 
-	data = np.array(content['data'])
-	metadata = np.array(content['metadata'])
+	def get_ra(self):
+		metadata_key = "ra"
+		index = self.get_metadata_index(metadata_key)
+		return self.data[:, index]
+		
+	def get_dec(self):
+		metadata_key = "dec"
+		index = self.get_metadata_index(metadata_key)
+		return self.data[:, index]
 
-def get_metadata_index(key):
-	global metadata
+	def get_pmra(self):
+		metadata_key = "pmra"
+		index = self.get_metadata_index(metadata_key)
+		return self.data[:, index]
 
-	size = metadata.size
-	for i in range(size):
-		if (metadata[i]['name'] == key):
-			return i
+	def get_pmdec(self):
+		metadata_key = "pmdec"
+		index = self.get_metadata_index(metadata_key)
+		return self.data[:, index]
 
-def get_ra():
-	metadata_key = "ra"
-	index = get_metadata_index(metadata_key)
-	return data[:, index]
-	
-def get_dec():
-	metadata_key = "dec"
-	index = get_metadata_index(metadata_key)
-	return data[:, index]
+	def get_parallax(self):
+		metadata_key = "parallax"
+		index = self.get_metadata_index(metadata_key)
+		return self.data[:, index]
 
-def get_pmra():
-	metadata_key = "pmra"
-	index = get_metadata_index(metadata_key)
-	return data[:, index]
+	def get_star_data(self, index):
+		return self.data[index, :]
 
-def get_pmdec():
-	metadata_key = "pmdec"
-	index = get_metadata_index(metadata_key)
-	return data[:, index]
-
-def get_parallax():
-	metadata_key = "parallax"
-	index = get_metadata_index(metadata_key)
-	return data[:, index]
-
-def get_star_data(index):
-	global data
-	return data[index, :]
+	def get_data_size(self):
+		return self.data.shape[0]

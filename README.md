@@ -9,20 +9,21 @@ Internal dynamics of star clusters using the Gaia mission archive
 
 This library allows the user to pull data directly from Gaia archive JSON files and converts it into a usable format consisting of numpy arrays.
 
-## select_file(path)
+## Data(path)
 
 | Argument    | Type        | Description |
 | ----------- | ----------- |-------------|
 | path      | String       | The path containing the desired JSON file |
 
-This selects a JSON file to get the data from. This must be done before attempting to extract any data using any other methods.
-Note: The path starts from the location of the file.
+This creates a data object, containing all the data and metadata within the files downloaded from the Gaia archive in the form of numpy arrays.
 
 Example:
 ```py
-  select_file("Data/1675856164509O-result.json")
+  star_data = Data("Data/1675856164509O-result.json")
 ```
 In this case, the script running the method would be in the same location as the folder ```Data``` containing the JSON file.
+
+#### Returns: Data
 
 ## get_metadata_index(key)
 
@@ -37,7 +38,7 @@ This returns the index in the metadata of the JSON file corresponding to the pro
 Example:
 ```py
   metadata_key = "ra"
-  index = get_metadata_index(metadata_key)
+  index = star_data.get_metadata_index(metadata_key)
 ```
 
 This will get the metadata index for the right ascension column.
@@ -54,14 +55,14 @@ This will get the data for a specific star in the JSON file.
 
 Example:
 ```py
-  data = get_star_data(0)
+  data = star_data.get_star_data(0)
 ```
 
 This will return all the available data for the first star in the JSON file.
 
 ## get_dec():
 
-This will return an array of all declination within the data
+This will return an array of all declinations within the data
 
 #### Returns: numpy array
 
