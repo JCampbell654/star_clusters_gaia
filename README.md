@@ -90,3 +90,8 @@ This will return an array of all parallaxes within the data
 
 #### Returns: numpy array
 
+## get_parallax_err():
+
+This will return an array of all parallaxe errors within the data
+
+#### Returns: numpy array
