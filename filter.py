@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import simpson
 from scipy import stats
+import copy
 
 
 def none_filter(data):
@@ -89,7 +90,7 @@ def weight_probability_with_density(density, probability, data_x, data_y, limit_
 
 	return probability
 
-def filter_data(data, cluster_distance, cluster_radius, acceptance_value = 0.5, pm_limit_lower = -15, pm_limit_upper = 15, bins = 300, plot = False):
+def filter_data(data, cluster_distance, cluster_radius, pm_limit_lower = -15, pm_limit_upper = 15, bins = 300, plot = False):
 
 	#Filter out useless and out of range data
 	filtered_data = range_filter(none_filter(data), pm_limit_lower, pm_limit_upper)
@@ -105,10 +106,6 @@ def filter_data(data, cluster_distance, cluster_radius, acceptance_value = 0.5, 
 	#Weight probabilities with point density
 	weighted_probability = weight_probability_with_density(density, probability, filtered_pmra, filtered_pmdec, pm_limit_lower, pm_limit_upper, bins)
 
-	#Filter all stars that are below acceptance value
-	_filter = (weighted_probability >= acceptance_value)
-	filtered_data.data = filtered_data.data[_filter, :]
-
 	#Plot data
 	if plot == True:
 		plt.xlim([pm_limit_lower, pm_limit_upper])
@@ -116,10 +113,19 @@ def filter_data(data, cluster_distance, cluster_radius, acceptance_value = 0.5, 
 
 		plt.xlabel("PMRA [mas.yr**-1]")
 		plt.ylabel("PMDEC [mas.yr**-1]")
-
+		
 		sc = plt.scatter(filtered_pmra, filtered_pmdec, s=1, c=weighted_probability, cmap=plt.cm.hot)
 		plt.colorbar(sc, label="Membership probability")
 
 		plt.show()
 
-	return filtered_data
+	return filtered_data, weighted_probability
+
+def select_data(data, probability, acceptance_value):
+
+	#Filter all stars that are below acceptance value
+	_filter = (probability >= acceptance_value)
+	data.data = data.data[_filter, :]
+
+	return data
+
