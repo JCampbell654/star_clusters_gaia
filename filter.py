@@ -126,12 +126,3 @@ def select_data(data, probability, acceptance_value):
 	copy_data.data = copy_data.data[_filter, :]
 
 	return copy_data
-
-
-raw_data = Data("Data/NGC 5460.json")
-filtered_data, probabilities = filter_data(raw_data, 720, 2, pm_limit_lower=-30, pm_limit_upper=30, plot=True)
-
-selected_data = select_data(filtered_data, probabilities, 0.9)
-#selected_data.save("Filtered Data/NGC 2232-filtered2.json")
-print(selected_data.data.shape)
-
