@@ -6,6 +6,12 @@ from scipy import stats
 import copy
 
 
+def segments_intersect(x1, x2, y1, y2):
+    # Assumes x1 <= x2 and y1 <= y2; if this assumption is not safe, the code
+    # can be changed to have x1 being min(x1, x2) and x2 being max(x1, x2) and
+    # similarly for the ys.
+    return np.logical_and(x2 >= y1, y2 >= x1)
+
 def none_filter(data):
 
 	#Exclude all data that has "None" for any of the necessary measurements
@@ -28,7 +34,9 @@ def range_filter(data, limit_l, limit_u):
 
 def parallax_probability_distribution(position, uncertainty):
 	x = np.linspace(position-uncertainty, position+uncertainty, 500)
-	y = (x/x)/(2*uncertainty)
+	#y = (x/x)/(2*uncertainty)
+	#Normalised gaussian distribution
+	y = ((1/(2*np.pi*uncertainty))**(1/2))*np.exp(-((x-position)**2)/(2*uncertainty))
 	return x, y
 
 def parallax_filter(data, distance, radius):
@@ -42,28 +50,17 @@ def parallax_filter(data, distance, radius):
 	star_dist_err = np.abs(par_err/(par**2))
 
 	#Find limits for possible cluster region
-	x_l = distance - radius
-	x_u = distance + radius
+	cluster_limit_l = distance - radius
+	cluster_limit_u = distance + radius
+
+	#Check if cluster range intersects uncertainty
+	_filter = segments_intersect(cluster_limit_l, cluster_limit_u, star_dist - star_dist_err, star_dist + star_dist_err)
+
+	#Check if parallax uncertainty is too large (discard if it is)
+	probability = np.logical_and(_filter, star_dist > star_dist_err*3).astype(int)
 	
-	#Initialize probability array
-	probability = np.array([])
-
-	#Calculate how much of the probability distribution is within the cluster range for each star
-	for i in range(star_dist.size):
-		x_pd, y_pd = parallax_probability_distribution(star_dist[i], star_dist_err[i])
-		_filter = np.logical_and((x_pd > x_l), (x_pd < x_u))
-		x_pd = x_pd[_filter]
-		y_pd = y_pd[_filter]
-
-		#Calculate area under probability distribution to get probability of membership
-		if x_pd.size == 0:
-			probability = np.append(probability, 0)
-		else:
-			dx = (x_pd.max() - x_pd.min()) / x_pd.size
-			#Calculate area under curve
-			probability = np.append(probability, simpson(y_pd, dx=dx))
-
 	return probability
+
 
 def point_density(data_x, data_y, probability, limit_l, limit_u, nbins):
 	X, Y = np.mgrid[limit_l:limit_u:nbins*1j, limit_l:limit_u:nbins*1j]
@@ -105,7 +102,6 @@ def filter_data(data, cluster_distance, cluster_radius, pm_limit_lower = -15, pm
 
 	#Weight probabilities with point density
 	weighted_probability = weight_probability_with_density(density, probability, filtered_pmra, filtered_pmdec, pm_limit_lower, pm_limit_upper, bins)
-
 	#Plot data
 	if plot == True:
 		plt.xlim([pm_limit_lower, pm_limit_upper])
@@ -114,6 +110,7 @@ def filter_data(data, cluster_distance, cluster_radius, pm_limit_lower = -15, pm
 		plt.xlabel("PMRA [mas.yr**-1]")
 		plt.ylabel("PMDEC [mas.yr**-1]")
 		
+		pc = plt.pcolormesh(x_d, y_d, density)
 		sc = plt.scatter(filtered_pmra, filtered_pmdec, s=1, c=weighted_probability, cmap=plt.cm.hot)
 		plt.colorbar(sc, label="Membership probability")
 
@@ -125,7 +122,16 @@ def select_data(data, probability, acceptance_value):
 
 	#Filter all stars that are below acceptance value
 	_filter = (probability >= acceptance_value)
-	data.data = data.data[_filter, :]
+	copy_data = copy.copy(data)
+	copy_data.data = copy_data.data[_filter, :]
 
-	return data
+	return copy_data
+
+
+raw_data = Data("Data/NGC 5460.json")
+filtered_data, probabilities = filter_data(raw_data, 720, 2, pm_limit_lower=-30, pm_limit_upper=30, plot=True)
+
+selected_data = select_data(filtered_data, probabilities, 0.9)
+#selected_data.save("Filtered Data/NGC 2232-filtered2.json")
+print(selected_data.data.shape)
 
