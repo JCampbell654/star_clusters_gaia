@@ -30,7 +30,7 @@ def change_basis(data): # Function to change pmra and pmdec into pm in the angul
 
     return pmtheta, pmr
 
-#Calculate the anisotropt parameter of each star
-def anisotropic_parameter(data):
+#Calculate the anisotropy parameter of each star
+def anisotropy_parameter(data):
 	pmtheta, pmr = change_basis(data)
 	return  1 - ((pmtheta**2)/(pmr**2))
