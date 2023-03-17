@@ -21,38 +21,53 @@ class Data:
 		with open(path, "w") as outfile:
 			outfile.write(json.dumps(final_data))
 
-	def get_ra(self):
+	@property
+	def ra(self):
 		metadata_key = "ra"
 		index = self.get_metadata_index(metadata_key)
 		return self.data[:, index]
 		
-	def get_dec(self):
+	@property
+	def dec(self):
 		metadata_key = "dec"
 		index = self.get_metadata_index(metadata_key)
 		return self.data[:, index]
 
-	def get_pmra(self):
+	@property
+	def pmra(self):
 		metadata_key = "pmra"
 		index = self.get_metadata_index(metadata_key)
-		return self.data[:, index]
+		return self.data[:, index]	
 
-	def get_pmdec(self):
+	@pmra.setter
+	def pmra(self, value):
+		metadata_key = "pmra"
+		index = self.get_metadata_index(metadata_key)
+		self.data[:, index] = value
+
+	@property
+	def pmdec(self):
 		metadata_key = "pmdec"
 		index = self.get_metadata_index(metadata_key)
 		return self.data[:, index]
 
-	def get_parallax(self):
+	@pmdec.setter
+	def pmdec(self, value):
+		metadata_key = "pmdec"
+		index = self.get_metadata_index(metadata_key)
+		self.data[:, index] = value
+
+	@property
+	def parallax(self):
 		metadata_key = "parallax"
 		index = self.get_metadata_index(metadata_key)
 		return self.data[:, index]
 
-	def get_parallax_err(self):
+	@property
+	def parallax_err(self):
 		metadata_key = "parallax_error"
 		index = self.get_metadata_index(metadata_key)
 		return self.data[:, index]
-
-	def get_star_data(self, index):
-		return self.data[index, :]
 
 	def get_data_size(self):
 		return self.data.shape[0]
