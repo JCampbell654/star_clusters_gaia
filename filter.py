@@ -127,22 +127,3 @@ def select_data(data, probability, acceptance_value):
 	copy_data.data = copy_data.data[_filter, :]
 
 	return copy_data
-
-data = Data("Data/AM 2.json")
-
-
-#centre = np.array([-7.486, -19.794])
-
-#dist = np.sqrt((data.pmra-centre[0])**2 + (data.pmdec-centre[1])**2)
-#data.data = data.data[dist < 1, :]
-
-
-filtered_data, probability = filter_data(data, 9197, 1.74, plot=True)
-selected_data = select_data(filtered_data, probability, 0.9)
-print(selected_data.get_data_size())
-#selected_data.save("Filtered Data/NGC 188-filtered.json")
-
-#y, x, _ = plt.hist(np.clip(1/(data.parallax * 1e-3), 0, 2000), bins=100)
-#print(x[np.where(y == y.max())])
-#plt.show()
-
