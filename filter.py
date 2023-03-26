@@ -15,7 +15,7 @@ def segments_intersect(x1, x2, y1, y2):
 def none_filter(data):
 
 	#Exclude all data that has "None" for any of the necessary measurements
-	_filter = data.get_parallax()
+	_filter = data.parallax
 	_filter = (_filter != None)
 	data.data = data.data[_filter, :]
 	return data
@@ -23,8 +23,8 @@ def none_filter(data):
 def range_filter(data, limit_l, limit_u):
 
 	#Exclude data that is outside velocity space range
-	pmra = data.get_pmra()
-	pmdec = data.get_pmdec()
+	pmra = data.pmra
+	pmdec = data.pmdec
 	_filter = (pmra < limit_u)
 	_filter = np.logical_and(_filter, pmra > limit_l)
 	_filter = np.logical_and(_filter, pmdec < limit_u)
@@ -42,8 +42,8 @@ def parallax_probability_distribution(position, uncertainty):
 def parallax_filter(data, distance, radius):
 
 	#Get parallax data
-	par = data.get_parallax() * 1e-3
-	par_err = data.get_parallax_err() * 1e-3
+	par = data.parallax * 1e-3
+	par_err = data.parallax_err * 1e-3
 
 	#Calculate distances from parallax data
 	star_dist = 1/par
@@ -58,6 +58,7 @@ def parallax_filter(data, distance, radius):
 
 	#Check if parallax uncertainty is too large (discard if it is)
 	probability = np.logical_and(_filter, star_dist > star_dist_err*3).astype(int)
+	#probability = _filter
 	
 	return probability
 
@@ -87,12 +88,12 @@ def weight_probability_with_density(density, probability, data_x, data_y, limit_
 
 	return probability
 
-def filter_data(data, cluster_distance, cluster_radius, pm_limit_lower = -15, pm_limit_upper = 15, bins = 300, plot = False):
+def filter_data(data, cluster_distance, cluster_radius, pm_limit_lower = -30, pm_limit_upper = 30, bins = 300, plot = False):
 
 	#Filter out useless and out of range data
 	filtered_data = range_filter(none_filter(data), pm_limit_lower, pm_limit_upper)
-	filtered_pmra = filtered_data.get_pmra().astype(float)
-	filtered_pmdec = filtered_data.get_pmdec().astype(float)
+	filtered_pmra = filtered_data.pmra
+	filtered_pmdec = filtered_data.pmdec
 
 	#Calculate probabilities of data using parallax data
 	probability = parallax_filter(filtered_data, cluster_distance, cluster_radius)
