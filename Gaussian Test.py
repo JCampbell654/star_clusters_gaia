@@ -14,11 +14,20 @@ from scipy import stats
 import copy
 
 #%% Importing Data
-data_folder = 'C:/Users/rhbjo/OneDrive - The University of Nottingham/Shared/'
+data_folder = 'C:/Users/rhbjo/OneDrive - The University of Nottingham/Shared/Filtered Data/'
 data = Data(data_folder + 'Messier 47-kstest-filtered.json')
 
 pmr, pmt = data.change_basis()
 
+#%%
+
+def exclude_tails(n, velocity):
+    sorted_data = np.sort(velocity)
+    excluded_tails = sorted_data[n:-n]
+    
+    return excluded_tails
+
+#%%
 def cal_cumfreq(key, velocity):
     numbins=100
     x = np.linspace(velocity.min(), velocity.max(), numbins)
@@ -27,28 +36,26 @@ def cal_cumfreq(key, velocity):
     
     fig, ax = plt.subplots()
     
-    cumfreq, x, _ = plt.hist(velocity, bins=numbins, density=True, cumulative=True)
+    bar_heights, x, _ = plt.hist(velocity, bins=numbins, density=True, cumulative=True)
     
-    dx = x[1]-x[0]
-    y = ((1/(np.sqrt(2*np.pi) * sigma)))*np.exp(-(1/2)*((x-mu)/sigma)**2)
-    y = np.cumsum(y)*dx
+    y = stats.norm.cdf(x, mu, sigma)
     
     #plotting
     plt.plot(x, y, lw=2, c='r')
     ax.set_xlabel(f'{key} velocity')
     ax.set_ylabel('cumfreq density')
     plt.show()
-    
-    
-    return cumfreq
+        
+    return bar_heights, mu, sigma
 
 #%%ks-test
 
 def ks_test(key, velocity):
-    cumfreq = cal_cumfreq(key, velocity)
-    ks_test = stats.ks_1samp(cumfreq, stats.norm.cdf)
+    cumfreq, mu, sigma = cal_cumfreq(key, velocity)
+    ks_test = stats.ks_1samp(cumfreq, stats.norm.cdf, args=(mu, sigma))
+    test_statistic = ks_test.statistic
     p_val = ks_test.pvalue
-    print(p_val)
+    print(test_statistic, p_val)
 
 ks_test('pmr', pmr)
 ks_test('pmt', pmt)
