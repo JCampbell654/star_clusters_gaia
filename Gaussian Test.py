@@ -6,6 +6,7 @@ Created on Wed Mar 29 15:25:21 2023
 """
 
 #%% Functions
+
 from data_handler import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,25 +15,22 @@ from scipy import stats
 import copy
 
 #%% Importing Data
+
 data_folder = 'C:/Users/rhbjo/OneDrive - The University of Nottingham/Shared/Filtered Data/'
 data = Data(data_folder + 'Messier 47-kstest-filtered.json')
 
 pmr, pmt = data.change_basis()
 
-#%%
 
-def exclude_tails(n, velocity):
-    sorted_data = np.sort(velocity)
-    excluded_tails = sorted_data[n:-n]
-    
-    return excluded_tails
+#%%cumfreq calculations
 
-#%%
 def cal_cumfreq(key, velocity):
     numbins=100
-    x = np.linspace(velocity.min(), velocity.max(), numbins)
+
     sigma = np.std(velocity)
     mu = np.mean(velocity)
+    
+    x = np.linspace(velocity.min(), velocity.max(), numbins)
     
     fig, ax = plt.subplots()
     
@@ -46,13 +44,13 @@ def cal_cumfreq(key, velocity):
     ax.set_ylabel('cumfreq density')
     plt.show()
         
-    return bar_heights, mu, sigma
+    return mu, sigma
 
 #%%ks-test
 
 def ks_test(key, velocity):
-    cumfreq, mu, sigma = cal_cumfreq(key, velocity)
-    ks_test = stats.ks_1samp(cumfreq, stats.norm.cdf, args=(mu, sigma))
+    mu, sigma = cal_cumfreq(key, velocity)
+    ks_test = stats.ks_1samp(velocity, stats.norm.cdf, args=(mu, sigma))
     test_statistic = ks_test.statistic
     p_val = ks_test.pvalue
     print(test_statistic, p_val)
