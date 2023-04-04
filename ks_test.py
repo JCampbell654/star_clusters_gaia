@@ -34,14 +34,15 @@ def cal_cumfreq(key, velocity):
     
     fig, ax = plt.subplots()
     
-    bar_heights, x, _ = plt.hist(velocity, bins=numbins, density=True, cumulative=True)
+    bar_heights, x, _ = plt.hist(velocity, bins=numbins, density=True, cumulative=True, label='Velocity dist')
     
     y = stats.norm.cdf(x, mu, sigma)
     
     #plotting
-    plt.plot(x, y, lw=2, c='r')
+    plt.plot(x, y, lw=2, c='r', label='Normal dist')
     ax.set_xlabel(f'{key} velocity')
     ax.set_ylabel('cumfreq density')
+    ax.legend()
     plt.show()
         
     return mu, sigma
