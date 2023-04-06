@@ -15,7 +15,7 @@ import pandas as pd
 
 #%%Files and Folders
 
-cluster = 'NGC 7789'
+cluster = 'NGC 5460'
 
 data_folder = 'C:/Users/rhbjo/OneDrive - The University of Nottingham/Shared/Final Data/'
 data = Data(data_folder + f'{cluster}-final.json')
